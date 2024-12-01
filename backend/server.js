@@ -10,8 +10,11 @@ app.use('/api/users', userRoutes);
 
 // Set up server
 const port = process.env.PORT || 5000;
-sequelize.sync().then(() => {
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
-}).catch(err => console.error(err));
+sequelize.sync({ force: true })
+  .then(() => {
+    console.log('Database synchronized');
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  })
+  .catch(err => console.error('Error syncing database:', err));

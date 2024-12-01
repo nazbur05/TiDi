@@ -4,18 +4,19 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 const router = express.Router();
 
-// Secret key for JWT
-const secretKey = '1470269369';
+const secretKey = process.env.JWT_SECRET || '1470258369';
 
 // Register a new user
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  console.log('Received registration request with username:', username);
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ username, password: hashedPassword });
     res.status(201).json(user);
   } catch (error) {
-    res.status(400).json({ message: 'Error creating user', error });
+    console.error('Error creating user:', error);
+    res.status(400).json({ message: 'Error creating user', error: error.message });
   }
 });
 
@@ -30,7 +31,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: '1h' });
     res.json({ token });
   } catch (error) {
-    res.status(400).json({ message: 'Error logging in', error });
+    res.status(400).json({ message: 'Error logging in', error: error.message });
   }
 });
 
