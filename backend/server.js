@@ -1,20 +1,18 @@
-const express = require('express');
-const sequelize = require('./config/database');
-const userRoutes = require('./routes/users');
+import express from 'express';
+import userRoutes from './routes/users.js';
 
 const app = express();
+const PORT = 3000;
+
 app.use(express.json());
 
-// Use user routes
-app.use('/api/users', userRoutes);
+app.get('/', (req, res) => {
+    res.send('Badabing badaboom');
+});
 
-// Set up server
-const port = process.env.PORT || 5000;
-sequelize.sync({ force: true })
-  .then(() => {
-    console.log('Database synchronized');
-    app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
-    });
-  })
-  .catch(err => console.error('Error syncing database:', err));
+// Use the user routes for any requests starting with /users
+app.use('/users', userRoutes);
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});

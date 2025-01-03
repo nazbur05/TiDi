@@ -1,16 +1,26 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+import db from '../config/database.js';
 
-const User = sequelize.define('User', {
-  username: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false
-  }
-});
+export const getAllUsers = async () => {
+    const [rows] = await db.query('SELECT * FROM users');
+    return rows;
+};
 
-module.exports = User;
+export const getUserById = async (id) => {
+    const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [id]);
+    return rows[0];
+};
+
+export const createUser = async (name, email) => {
+    const [result] = await db.query('INSERT INTO users (name, email) VALUES (?, ?)', [name, email]);
+    return result.insertId;
+};
+
+export const updateUser = async (id, name, email) => {
+    const [result] = await db.query('UPDATE users SET name = ?, email = ? WHERE id = ?', [name, email, id]);
+    return result.affectedRows;
+};
+
+export const deleteUser = async (id) => {
+    const [result] = await db.query('DELETE FROM users WHERE id = ?', [id]);
+    return result.affectedRows;
+};

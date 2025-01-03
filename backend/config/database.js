@@ -1,7 +1,12 @@
-const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: 'new_database.sqlite'
+import mysql from 'mysql2/promise';
+
+export const db = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: 'mysqlfortidi',
+    database: 'tididb'
 });
 
-module.exports = sequelize;
+console.log('Database pool created successfully');
+
+export default db;
