@@ -3,7 +3,7 @@ import mysql from 'mysql2/promise';
 export const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'mysqlfortidi',
+    password: 'Ekiminbes_05',
     database: 'tididb'
 });
 
