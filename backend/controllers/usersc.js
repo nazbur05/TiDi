@@ -6,13 +6,11 @@ export const createUserHandler = async (req, res) => {
     const { name, usrname, email, password } = req.body;
 
     try {
-        // Check if email is already in use
         const existingUserByEmail = await getUserByEmail(email);
         if (existingUserByEmail) {
             return res.status(400).json({ success: false, message: 'Email already in use' });
         }
 
-        // Check if username is already in use
         const existingUserByUsername = await getUserByUsername(usrname);
         if (existingUserByUsername) {
             return res.status(400).json({ success: false, message: 'Username already in use' });
@@ -26,7 +24,6 @@ export const createUserHandler = async (req, res) => {
         res.status(500).json({ success: false, error: err.message });
     }
 };
-
 
 export const loginUserHandler = async (req, res) => {
     const { email, password } = req.body;
@@ -42,13 +39,11 @@ export const loginUserHandler = async (req, res) => {
         }
 
         const token = jwt.sign({ id: user.id }, 'megasupersecretkey123', { expiresIn: '1h' });
-        res.json({ success: true, token });
+        res.json({ success: true, token, redirectUrl: 'updateprofile.html' });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
-};
-
-
+}
 
 export const getUsers = async (req, res) => {
     try {
@@ -86,18 +81,73 @@ export const getUser = async (req, res) => {
 };
 
 
-export const updateUserHandler = async (req, res) => {
-    const { id } = req.params;
-    const { name, usrname, email } = req.body;
+// export const updateUserHandler = async (req, res) => {
+//     const { id } = req.params;
+//     const { name, usrname, email } = req.body;
+//     try {
+//         const affectedRows = await updateUser(id, name, usrname, email);
+//         if (affectedRows === 0) {
+//             res.status(404).json({ success: false, message: 'User not found' });
+//         } else {
+//             res.json({ success: true });
+//         }
+//     } catch (err) {
+//         res.status(500).json({ success: false, error: err.message });
+//     }
+// };
+
+export const getCurrentUserHandler = async (req, res) => {
+    const userId = req.user.id;
+
     try {
-        const affectedRows = await updateUser(id, name, usrname, email);
-        if (affectedRows === 0) {
-            res.status(404).json({ success: false, message: 'User not found' });
-        } else {
-            res.json({ success: true });
+        const user = await getUserById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
         }
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const updateUserHandler = async (req, res) => {
+    const userId = req.user.id;
+    const { name, usrname, email, password, currentPassword } = req.body;
+
+    // Validate input
+    if (!name && !usrname && !email && !password) {
+        return res.status(400).json({ error: 'At least one field is required to update' });
+    }
+
+    try {
+        const user = await getUserById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        if ((email || password) && !currentPassword) {
+            return res.status(400).json({ error: 'Current password is required to change email or password' });
+        }
+
+        if (currentPassword) {
+            const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+            if (!isPasswordValid) {
+                return res.status(401).json({ error: 'Current password is incorrect' });
+            }
+        }
+
+        const updatedData = { name, usrname, email, password };
+        const affectedRows = await updateUser(userId, updatedData);
+
+        if (affectedRows === 0) {
+            return res.status(404).json({ error: 'User not found or no changes made' });
+        }
+
+        res.status(200).json({ message: 'User updated successfully' });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 

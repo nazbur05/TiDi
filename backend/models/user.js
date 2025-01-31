@@ -10,8 +10,44 @@ export const createUser = async (name, usrname, email, password) => {
 };
 
 
-export const updateUser = async (id, name, usrname, email) => {
-    const [result] = await db.query('UPDATE users SET name = ?, usrname = ?, email = ? WHERE id = ?', [name, usrname, email, id]);
+// export const updateUser = async (id, name, usrname, email) => {
+//     const [result] = await db.query('UPDATE users SET name = ?, usrname = ?, email = ? WHERE id = ?', [name, usrname, email, id]);
+//     return result.affectedRows;
+// };
+
+export const updateUser = async (id, { name, usrname, email, password }) => {
+    let hashedPassword;
+    if (password) {
+        const saltRounds = 10;
+        hashedPassword = await bcrypt.hash(password, saltRounds);
+    }
+
+    let query = 'UPDATE users SET ';
+    const fields = [];
+    const values = [];
+
+    if (name) {
+        fields.push('name = ?');
+        values.push(name);
+    }
+    if (usrname) {
+        fields.push('usrname = ?');
+        values.push(usrname);
+    }
+    if (email) {
+        fields.push('email = ?');
+        values.push(email);
+    }
+    if (hashedPassword) {
+        fields.push('password = ?');
+        values.push(hashedPassword);
+    }
+
+    query += fields.join(', ');
+    query += ' WHERE id = ?';
+    values.push(id);
+    
+    const [result] = await db.query(query, values);
     return result.affectedRows;
 };
 
