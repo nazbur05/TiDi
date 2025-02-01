@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Post Upload</title>
+</head>
+<body>
+    <h1>Create a Post</h1>
+    <form id="postForm" enctype="multipart/form-data">
+        <label for="text">Text:</label><br>
+        <input type="text" id="text" name="text" required><br><br>
+        <label for="image">Image (optional):</label><br>
+        <input type="file" id="image" name="image"><br><br>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="response"></div>
+
+    <script>
+        document.getElementById('postForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch('http://localhost:3000/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                document.getElementById('response').innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('response').innerText = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

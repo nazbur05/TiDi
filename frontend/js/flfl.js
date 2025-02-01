@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleRightClick(event) {
         event.preventDefault();
         const userIdToUnfollow = event.target.dataset.userId;
-        const action = confirm('Do you want to unfollow this user?');
+        const action = confirm('Do you want to unfollow this user/delete from followers?');
         if (action) {
             unfollowUser(userIdToUnfollow);
         }
