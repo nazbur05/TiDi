@@ -19,7 +19,7 @@ export const createUserHandler = async (req, res) => {
         // Create new user with the hashed password
         const id = await createUser(name, usrname, email, password);
         console.log("User data inserted:", { name, usrname, email, password });
-        res.json({ success: true, id });
+        res.json({ success: true, id, redirectUrl: 'mail.html' });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
@@ -39,7 +39,12 @@ export const loginUserHandler = async (req, res) => {
         }
 
         const token = jwt.sign({ id: user.id }, 'megasupersecretkey123', { expiresIn: '1h' });
-        res.json({ success: true, token, redirectUrl: 'updateprofile.html' });
+        res.json({
+            success: true,
+            token,
+            userId: user.id,
+            redirectUrl: 'main.html'
+        });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
@@ -115,7 +120,6 @@ export const updateUserHandler = async (req, res) => {
     const userId = req.user.id;
     const { name, usrname, email, password, currentPassword } = req.body;
 
-    // Validate input
     if (!name && !usrname && !email && !password) {
         return res.status(400).json({ error: 'At least one field is required to update' });
     }

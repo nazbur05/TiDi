@@ -17,9 +17,11 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     .then(data => {
         if (data.success) {
             localStorage.setItem('token', data.token);
+            localStorage.setItem('userId', data.userId);
+
             window.location.href = data.redirectUrl;
         } else {
-            alert(`Error`);
+            alert('Error: ' + data.message);
         }
     })
     .catch((error) => {

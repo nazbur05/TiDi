@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming you're using JWT tokens
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
     })
     .then(response => response.json())
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming you're using JWT tokens
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify(data)
         })
