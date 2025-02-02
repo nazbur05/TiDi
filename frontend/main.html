@@ -4,16 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
-    <style>
-    </style>
 </head>
 <body>
     <h1>Welcome to Your Dashboard</h1>
-    <button onclick="location.href='followersfollowing.html'">Followers</button>
-    <button onclick="location.href='followersfollowing.html'">Following</button>
-    <button onclick="location.href='updateprofile.html'">Update Profile</button>
+    <button onclick="location.href='profile.html'">My Profile</button>
     <button onclick="location.href='makepost.html'">Create a post</button>
+
+    <h1>Posts</h1>
+    <button onclick="showSection('feed')">Feed</button>
+    <button onclick="showSection('all')">All Posts</button>
+
+    <div id="feedSection" class="section active">
+        <h2>Feed</h2>
+        <div id="feedContainer"></div>
+    </div>
+
+    <div id="allSection" class="section">
+        <h2>All Posts</h2>
+        <div id="allContainer"></div>
+    </div>
+
+    <script src="js/main.js"></script>
 </body>
 </html>
-
-<!-- Main page will have posts from following users in the middle, navbar to the left (profile, notifications, settings), searchbar at the top -->

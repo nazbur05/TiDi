@@ -1,7 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { getAllUsers, getUserById, createUser, updateUser, deleteUser, getUserByEmail, getUserByUsername } from '../models/user.js';
+import { getAllUsers, getUserById, createUser, updateUser, deleteUser, getUserByEmail, getUserByUsername, getUserPosts } from '../models/user.js';
 
+// Handler to create a new user
 export const createUserHandler = async (req, res) => {
     const { name, usrname, email, password } = req.body;
 
@@ -18,15 +19,18 @@ export const createUserHandler = async (req, res) => {
 
         // Create new user with the hashed password
         const id = await createUser(name, usrname, email, password);
-        console.log("User data inserted:", { name, usrname, email, password });
-        res.json({ success: true, id, redirectUrl: 'mail.html' });
+        console.log("User created:", { name, usrname, email });
+        res.json({ success: true, id, redirectUrl: 'main.html' });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        console.error('Error creating user:', err);
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 };
 
+// Handler to log in a user
 export const loginUserHandler = async (req, res) => {
     const { email, password } = req.body;
+
     try {
         const user = await getUserByEmail(email);
         if (!user) {
@@ -39,26 +43,25 @@ export const loginUserHandler = async (req, res) => {
         }
 
         const token = jwt.sign({ id: user.id }, 'megasupersecretkey123', { expiresIn: '1h' });
-        res.json({
-            success: true,
-            token,
-            userId: user.id,
-            redirectUrl: 'main.html'
-        });
+        res.json({ success: true, token, userId: user.id, redirectUrl: 'main.html' });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        console.error('Error logging in user:', err);
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
-}
+};
 
+// Handler to get all users
 export const getUsers = async (req, res) => {
     try {
         const users = await getAllUsers();
         res.json({ success: true, users });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        console.error('Error fetching users:', err);
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 };
 
+// Handler to get a user by ID, username, or email
 export const getUser = async (req, res) => {
     const { id, usrname, email } = req.params;
 
@@ -81,26 +84,12 @@ export const getUser = async (req, res) => {
 
         res.json({ success: true, user });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        console.error('Error fetching user:', err);
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 };
 
-
-// export const updateUserHandler = async (req, res) => {
-//     const { id } = req.params;
-//     const { name, usrname, email } = req.body;
-//     try {
-//         const affectedRows = await updateUser(id, name, usrname, email);
-//         if (affectedRows === 0) {
-//             res.status(404).json({ success: false, message: 'User not found' });
-//         } else {
-//             res.json({ success: true });
-//         }
-//     } catch (err) {
-//         res.status(500).json({ success: false, error: err.message });
-//     }
-// };
-
+// Handler to get the current authenticated user
 export const getCurrentUserHandler = async (req, res) => {
     const userId = req.user.id;
 
@@ -109,13 +98,14 @@ export const getCurrentUserHandler = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        res.status(200).json(user);
+        res.json(user);
     } catch (error) {
         console.error('Error fetching user:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
 
+// Handler to update a user
 export const updateUserHandler = async (req, res) => {
     const userId = req.user.id;
     const { name, usrname, email, password, currentPassword } = req.body;
@@ -148,15 +138,17 @@ export const updateUserHandler = async (req, res) => {
             return res.status(404).json({ error: 'User not found or no changes made' });
         }
 
-        res.status(200).json({ message: 'User updated successfully' });
+        res.json({ message: 'User updated successfully' });
     } catch (error) {
         console.error('Error updating user:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
 
+// Handler to delete a user
 export const deleteUserHandler = async (req, res) => {
     const { id } = req.params;
+
     try {
         const affectedRows = await deleteUser(id);
         if (affectedRows === 0) {
@@ -165,6 +157,21 @@ export const deleteUserHandler = async (req, res) => {
             res.json({ success: true });
         }
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        console.error('Error deleting user:', err);
+        res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+};
+
+// Handler to get a user's profile
+export const getUserProfileHandler = async (req, res) => {
+    const userId = req.params.userId;
+
+    try {
+        const user = await getUserById(userId);
+        const posts = await getUserPosts(userId);
+        res.json({ user, posts });
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };

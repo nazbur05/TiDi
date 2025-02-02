@@ -1,5 +1,5 @@
 import express from 'express';
-import { createUserHandler, loginUserHandler, getUsers, getUser, updateUserHandler, deleteUserHandler, getCurrentUserHandler } from '../controllers/usersc.js';
+import { createUserHandler, loginUserHandler, getUsers, getUser, updateUserHandler, deleteUserHandler, getCurrentUserHandler, getUserProfileHandler } from '../controllers/usersc.js';
 import authenticate from '../auth.js';
 
 const router = express.Router();
@@ -14,7 +14,7 @@ router.post('/login', loginUserHandler);
 router.get('/', getUsers);
 
 //Show a user
-router.get('/:id', getUser);
+router.get('/profile/:userId', authenticate, getUserProfileHandler);
 
 //Authorise user
 router.get('/me', authenticate, getCurrentUserHandler);

@@ -1,5 +1,6 @@
 import { followUser, unfollowUser, getUserFollowers, getUserFollowing } from '../models/follower.js';
 
+// Handler to follow a user
 export const followUserHandler = async (req, res) => {
     const userId = req.user.id;
     const followerId = parseInt(req.params.id, 10);
@@ -12,10 +13,12 @@ export const followUserHandler = async (req, res) => {
         await followUser(userId, followerId);
         res.status(200).json({ message: 'User followed successfully' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error following user:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
+// Handler to unfollow a user
 export const unfollowUserHandler = async (req, res) => {
     const userId = req.user.id;
     const followerId = parseInt(req.params.id, 10);
@@ -24,10 +27,12 @@ export const unfollowUserHandler = async (req, res) => {
         await unfollowUser(userId, followerId);
         res.status(200).json({ message: 'User unfollowed successfully' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error unfollowing user:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
+// Handler to get followers of a user
 export const getFollowersHandler = async (req, res) => {
     const userId = parseInt(req.params.id, 10);
 
@@ -35,10 +40,12 @@ export const getFollowersHandler = async (req, res) => {
         const followers = await getUserFollowers(userId);
         res.status(200).json(followers);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching followers:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
+// Handler to get users followed by a user
 export const getFollowingHandler = async (req, res) => {
     const userId = parseInt(req.params.id, 10);
 
@@ -46,7 +53,8 @@ export const getFollowingHandler = async (req, res) => {
         const following = await getUserFollowing(userId);
         res.status(200).json(following);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching following:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
