@@ -1,6 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import { createPostHandler, getPostsByUserHandler, getAllPostsHandler, getPostsByFollowingHandler, updatePostHandler, deletePostHandler } from '../controllers/postsc.js';
+import { createCommentHandler, getCommentsByPostHandler, deleteCommentHandler, addLikeHandler, removeLikeHandler, getLikesByPostHandler } from '../controllers/commentsnLikesc.js';
 import authenticate from '../auth.js';
 
 const router = express.Router();
@@ -23,5 +24,15 @@ router.put('/:postId', upload.single('image'), authenticate, updatePostHandler);
 
 // Delete a post
 router.delete('/:postId', authenticate, deletePostHandler);
+
+// Comment routes
+router.post('/comments', authenticate, createCommentHandler);
+router.get('/comments/post/:postId', getCommentsByPostHandler);
+router.delete('/comments/:commentId', authenticate, deleteCommentHandler);
+
+// Like routes
+router.post('/likes', authenticate, addLikeHandler);
+router.delete('/likes', authenticate, removeLikeHandler);
+router.get('/likes/post/:postId', getLikesByPostHandler);
 
 export default router;

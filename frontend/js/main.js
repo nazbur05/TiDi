@@ -59,34 +59,38 @@ async function loadAllPosts(token) {
 function displayPosts(posts, container) {
     container.innerHTML = '';
     if (posts.length === 0) {
-        console.log('No posts to display');
         container.innerHTML = '<p>No posts available</p>';
+        return;
     }
+
     posts.forEach(post => {
         const postElement = document.createElement('div');
         postElement.className = 'post';
         postElement.innerHTML = `
-        <h3>Posted by: <a href="#" class="usrname" data-user-id="${post.user_id}">${post.usrname}</a></h3>
-        <p>${post.text}</p>
-        ${post.image_url ? `<img src="${post.image_url}" alt="Post Image" />` : ''}
-    `;
+            <h3>
+                Posted by: 
+                <a href="#" class="usrname" data-user-id="${post.user_id}">${post.usrname}</a>
+            </h3>
+            <p>${post.text}</p>
+            ${post.image_url ? `<img src="${post.image_url}" alt="Post Image" />` : ''}
+        `;
         container.appendChild(postElement);
-        addUsernameClickEventListeners();
     });
-}
 
-function addUsernameClickEventListeners() {
-    const usernames = document.querySelectorAll('.usrname');
-    usernames.forEach(usrname => {
-        usrname.addEventListener('click', function(event) {
+    // Not working for some reason
+    container.addEventListener('click', function (event) {
+        if (event.target.classList.contains('usrname')) {
             event.preventDefault();
             const userId = event.target.getAttribute('data-user-id');
             console.log(`Navigating to user profile with userId: ${userId}`);
             localStorage.setItem('selectedUserId', userId);
-            window.location.href = `userprofile.html`;
-        });
+            setTimeout(() => {
+                window.location.href = 'userprofile.html';
+            }, 100);
+        }
     });
 }
+
 
 function showSection(section) {
     document.querySelectorAll('.section').forEach(function(sec) {

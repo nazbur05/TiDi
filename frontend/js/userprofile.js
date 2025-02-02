@@ -1,9 +1,10 @@
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
     const userId = localStorage.getItem('selectedUserId');
-    console.log('userId is', userId)
+    console.log('Retrieved userId from localStorage:', userId);
 
     if (!userId) {
-        console.error('No user ID found in local storage');
+        alert('No user selected. Redirecting to home page.');
+        window.location.href = 'main.html'; // Redirect if no userId is found
         return;
     }
 
@@ -18,10 +19,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             throw new Error('Failed to fetch user profile');
         }
 
-        const data = await response.json();
-        displayUserProfile(data.user, data.posts);
+        const { user, posts } = await response.json();
+        displayUserProfile(user, posts);
     } catch (error) {
         console.error('Error fetching user profile:', error);
+        alert('Failed to load user profile.');
     }
 });
 
