@@ -7,31 +7,31 @@ document.addEventListener('DOMContentLoaded', async function() {
         return;
     }
 
-    await loadFeedPosts(token);
+    // await loadFeedPosts(token);
     await loadAllPosts(token);
 
     setInterval(() => {
-        loadFeedPosts(token);
+        // loadFeedPosts(token);
         loadAllPosts(token);
     }, 10000);
 });
 
-async function loadFeedPosts(token) {
-    try {
-        const response = await fetch('http://localhost:3000/posts/followed', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+// async function loadFeedPosts(token) {
+//     try {
+//         const response = await fetch('http://localhost:3000/posts/followed', {
+//             headers: {
+//                 'Authorization': `Bearer ${token}`
+//             }
+//         });
 
-        const posts = await response.json();
-        console.log('Feed Posts:', posts);
-        const feedContainer = document.getElementById('feedContainer');
-        displayPosts(posts, feedContainer);
-    } catch (error) {
-        console.error('Error fetching feed posts:', error);
-    }
-}
+//         const posts = await response.json();
+//         console.log('Feed Posts:', posts);
+//         const feedContainer = document.getElementById('feedContainer');
+//         displayPosts(posts, feedContainer);
+//     } catch (error) {
+//         console.error('Error fetching feed posts:', error);
+//     }
+// }
 
 async function loadAllPosts(token) {
     try {
@@ -228,7 +228,7 @@ async function deleteComment(commentId) {
     }
 }
 
-function showSection(section) {
-    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(`${section}Section`).classList.add('active');
-}
+// function showSection(section) {
+//     document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+//     document.getElementById(`${section}Section`).classList.add('active');
+// }

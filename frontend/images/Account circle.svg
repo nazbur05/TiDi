@@ -1,0 +1,12 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Account circle" clip-path="url(#clip0_26_4)">
+<g id="Group">
+<path id="Vector" d="M24 4C12.96 4 4 12.96 4 24C4 35.04 12.96 44 24 44C35.04 44 44 35.04 44 24C44 12.96 35.04 4 24 4ZM24 12C27.86 12 31 15.14 31 19C31 22.86 27.86 26 24 26C20.14 26 17 22.86 17 19C17 15.14 20.14 12 24 12ZM24 40C19.94 40 15.14 38.36 11.72 34.24C15.1 31.6 19.36 30 24 30C28.64 30 32.9 31.6 36.28 34.24C32.86 38.36 28.06 40 24 40Z" fill="#CC62D8" fill-opacity="0.82"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_26_4">
+<rect width="48" height="48" fill="white"/>
+</clipPath>
+</defs>
+</svg>
