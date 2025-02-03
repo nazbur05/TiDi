@@ -47,7 +47,28 @@ export const updatePost = async (postId, text, imageUrl) => {
 };
 
 // Delete a post
+// export const deletePost = async (postId) => {
+//     const query = 'DELETE FROM posts WHERE id = ?';
+//     await db.execute(query, [postId]);
+// };
+
 export const deletePost = async (postId) => {
-    const query = 'DELETE FROM posts WHERE id = ?';
-    await db.execute(query, [postId]);
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        await connection.query('DELETE FROM likes WHERE post_id = ?', [postId]);
+
+        await connection.query('DELETE FROM comments WHERE post_id = ?', [postId]);
+
+        await connection.query('DELETE FROM posts WHERE id = ?', [postId]);
+
+        await connection.commit();
+        return true;
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    } finally {
+        connection.release();
+    }
 };

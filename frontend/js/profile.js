@@ -1,52 +1,44 @@
 document.addEventListener('DOMContentLoaded', async function() {
     const token = localStorage.getItem('token');
-    console.log('Token:', token);
-
-    if (!token) {
-        console.error('No token found');
-        return;
-    }
-
-    await loadFeedPosts(token);
-    await loadAllPosts(token);
-
-    setInterval(() => {
-        loadFeedPosts(token);
-        loadAllPosts(token);
-    }, 10000);
+    const userId = localStorage.getItem('userId');
+    
+    await loadProfile(token, userId);
+    await loadUserPosts(token, userId);
 });
 
-async function loadFeedPosts(token) {
+async function loadProfile(token, userId) {
     try {
-        const response = await fetch('http://localhost:3000/posts/followed', {
+        const response = await fetch(`http://localhost:3000/users/me`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
 
-        const posts = await response.json();
-        console.log('Feed Posts:', posts);
-        const feedContainer = document.getElementById('feedContainer');
-        displayPosts(posts, feedContainer);
+        const profile = await response.json();
+        console.log('Profile:', profile);
+        const profileContainer = document.getElementById('profileContainer');
+        profileContainer.innerHTML = `
+            <p><strong>Username:</strong> ${profile.usrname}</p>
+        `;
     } catch (error) {
-        console.error('Error fetching feed posts:', error);
+        console.error('Error fetching profile:', error);
     }
 }
 
-async function loadAllPosts(token) {
+async function loadUserPosts(token, userId) {
     try {
-        const response = await fetch('http://localhost:3000/posts', {
+        const response = await fetch(`http://localhost:3000/posts/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
 
         const posts = await response.json();
-        console.log('All Posts:', posts);
-        const allContainer = document.getElementById('allContainer');
-        displayPosts(posts, allContainer);
+        console.log('User Posts:', posts);
+        const postsContainer = document.getElementById('postsContainer');
+        displayPosts(posts, postsContainer);
     } catch (error) {
-        console.error('Error fetching all posts:', error);
+        console.error('Error fetching user posts:', error);
     }
 }
 
@@ -57,7 +49,6 @@ function displayPosts(posts, container) {
         posts.forEach(post => {
             const postElement = document.createElement('div');
             postElement.className = 'post';
-            postElement.id = `post-${post.id}`;
             postElement.innerHTML = `
                 <h3>Posted by: <a href="#" class="usrname" data-user-id="${post.user_id}">${post.usrname}</a></h3>
                 <p>${post.text}</p>
@@ -70,30 +61,13 @@ function displayPosts(posts, container) {
                 </div>
                 <div id="comments-${post.id}">
                     ${Array.isArray(post.comments) ? post.comments.map(comment => `
-                        <div class="comment" id="comment-${comment.id}">
+                        <div class="comment">
                             <strong><a href="#" class="usrname" data-user-id="${comment.user_id}">${comment.usrname}</a></strong>: ${comment.text}
                         </div>
-                    `).join('') : ''}
+                    `).join('') : '<p>No comments available</p>'}
                 </div>
             `;
             container.appendChild(postElement);
-
-            postElement.addEventListener('contextmenu', (event) => {
-                event.preventDefault();
-                if (confirm('Do you want to delete this post?')) {
-                    deletePost(post.id);
-                }
-            });
-
-            Array.from(postElement.querySelectorAll('.comment')).forEach(commentElement => {
-                commentElement.addEventListener('contextmenu', (event) => {
-                    event.preventDefault();
-                    const commentId = commentElement.id.split('-')[1];
-                    if (confirm('Do you want to delete this comment?')) {
-                        deleteComment(commentId);
-                    }
-                });
-            });
         });
 
         addUsernameClickEventListeners();
@@ -162,73 +136,14 @@ async function commentPost(postId) {
             const commentsContainer = document.getElementById(`comments-${postId}`);
             const commentElement = document.createElement('div');
             commentElement.className = 'comment';
-            commentElement.id = `comment-${result.comment.id}`;
             commentElement.innerHTML = `<strong><a href="#" class="usrname" data-user-id="${result.user_id}">${result.usrname}</a></strong>: ${commentText}`;
             commentsContainer.appendChild(commentElement);
 
             document.getElementById(`commentText-${postId}`).value = '';
 
             addUsernameClickEventListeners();
-
-            commentElement.addEventListener('contextmenu', (event) => {
-                event.preventDefault();
-                if (confirm('Do you want to delete this comment?')) {
-                    deleteComment(result.comment.id);
-                }
-            });
         }
     } catch (error) {
         console.error('Error commenting on post:', error);
     }
-}
-
-async function deletePost(postId) {
-    const token = localStorage.getItem('token');
-
-    try {
-        const response = await fetch(`http://localhost:3000/posts/${postId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (response.ok) {
-            alert('Post deleted successfully');
-            document.getElementById(`post-${postId}`).remove();
-        } else {
-            throw new Error('Failed to delete post');
-        }
-    } catch (error) {
-        console.error('Error deleting post:', error);
-        alert('Failed to delete post.');
-    }
-}
-
-async function deleteComment(commentId) {
-    const token = localStorage.getItem('token');
-
-    try {
-        const response = await fetch(`http://localhost:3000/posts/comments/${commentId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (response.ok) {
-            alert('Comment deleted successfully');
-            document.getElementById(`comment-${commentId}`).remove();
-        } else {
-            throw new Error('Failed to delete comment');
-        }
-    } catch (error) {
-        console.error('Error deleting comment:', error);
-        alert('Failed to delete comment.');
-    }
-}
-
-function showSection(section) {
-    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(`${section}Section`).classList.add('active');
 }

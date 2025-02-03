@@ -88,13 +88,29 @@ export const updatePostHandler = async (req, res) => {
 };
 
 // Handler to delete a post
+// export const deletePostHandler = async (req, res) => {
+//     const { postId } = req.params;
+//     const userId = req.user.id;
+
+//     try {
+//         await deletePost(postId, userId);
+//         res.json({ success: true });
+//     } catch (error) {
+//         console.error('Error deleting post:', error);
+//         res.status(500).json({ success: false, error: 'Internal server error' });
+//     }
+// };
+
 export const deletePostHandler = async (req, res) => {
     const { postId } = req.params;
-    const userId = req.user.id;
 
     try {
-        await deletePost(postId, userId);
-        res.json({ success: true });
+        const success = await deletePost(postId);
+        if (success) {
+            res.status(200).json({ success: true, message: 'Post, associated comments, and likes deleted successfully' });
+        } else {
+            res.status(500).json({ success: false, message: 'Failed to delete post' });
+        }
     } catch (error) {
         console.error('Error deleting post:', error);
         res.status(500).json({ success: false, error: 'Internal server error' });

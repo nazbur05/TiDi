@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     if (!userId) {
         alert('No user selected. Redirecting to home page.');
-        window.location.href = 'main.html'; // Redirect if no userId is found
+        window.location.href = 'main.html';
         return;
     }
 
