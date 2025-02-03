@@ -4,30 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TiDi - login</title>
-    <!-- <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="/frontend/cs/login.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="icon" type="images/logo1.png" href="./images/logo1.png" > -->
+    <link rel="icon" type="images/logo1.png" href="./images/logo1.png" >
 </head>
 <body>
-    <div class="container">
-        <!-- <div class="gradient-background"> <img src="./images/background.png" alt="" class="background"></div> -->
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Login</button>
-            </div>
-        </form>
-    </div>
-    <div class="footer">
-        <p>Don't have an account? <a href="register.html">Sign Up</a></p>
-      </div>
+    <div class="container window">
+        <div class="gradient-background"> <img src="/frontend/images/background.png" alt="" class="background"></div>
+        <div class="form-container">
+            <img src="images/logo.png" class = "logo" alt="logo">
+            <form id="loginForm" class="loginForm">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                    <button type="submit">Log In</button>
+            </form>
+            <div class="footer">
+                <p>Don't have an account? <a href="register.html">Sign Up</a></p>
+              </div>
+        </div>
+    </div>  
     <script src="js/login.js"></script>
 </body>
 </html>

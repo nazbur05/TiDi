@@ -19,7 +19,7 @@ body {
 }
 
 .gradient-background {
-  background: url('images/background.png') no-repeat center center;
+  background: url('/frontend/images/background.png') no-repeat center center;
   background-size: cover;
   width: 50%;
   flex-shrink: 0;
@@ -118,12 +118,21 @@ input {
   text-decoration: underline;
 }
 
-@media (max-width: 600px) {
-  .form-container {
-      width: 90%;
+.animlap{
+  position: absolute;
+  top:550px;
+  height: 50%;
+  width: 30%;
+  left:10px;
+  animation: bounceInUp 2s;
+}
+@keyframes bounceInUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
   }
-
-  .signup-form {
-      max-width: 100%;
-  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

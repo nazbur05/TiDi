@@ -4,6 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Post Upload</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'K2D', sans-serif;
+            background: rgb(255, 194, 238);
+            color: #863bdc;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Headings */
+        h1 {
+            font-size: 2.5rem;
+            margin: 20px 0;
+            font-weight: 700;
+            color: #6c5ce7;
+        }
+
+        /* Sections */
+        .section {
+            width: 80%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            backdrop-filter: blur(10px);
+            margin: 20px 0;
+        }
+
+        /* Followers/Following List */
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background: rgba(255, 255, 255, 0.8);
+            color: #6c5ce7;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #fff;
+            font-size: 1.1rem;
+            text-align: left;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        li:hover {
+            background: #f8a5c2;
+            color: white;
+            transform: scale(1.03);
+        }
+
+        /* Buttons */
+        button {
+            background: #fd92f4;
+            border: 2px solid #fff;
+            padding: 12px 25px;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin: 10px;
+        }
+
+        button:hover {
+            background: #ff4d6d;
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section {
+                width: 95%;
+            }
+            
+            button {
+                width: 80%;
+                font-size: 1rem;
+            }
+            
+            li {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <h1>Create a Post</h1>
