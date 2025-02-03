@@ -3,6 +3,7 @@ import { followUser, unfollowUser, getUserFollowers, getUserFollowing } from '..
 // Handler to follow a user
 export const followUserHandler = async (req, res) => {
     const userId = req.user.id;
+    // const userId = parseInt(req.body.userId, 10);
     const followerId = parseInt(req.params.id, 10);
 
     if (userId === followerId) {
@@ -21,6 +22,7 @@ export const followUserHandler = async (req, res) => {
 // Handler to unfollow a user
 export const unfollowUserHandler = async (req, res) => {
     const userId = req.user.id;
+    // const userId = parseInt(req.body.userId, 10);
     const followerId = parseInt(req.params.id, 10);
 
     try {

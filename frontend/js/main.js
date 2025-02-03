@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function() {
     const token = localStorage.getItem('token');
-    console.log('Token:', token); // Debugging log
+    console.log('Token:', token);
 
     if (!token) {
         console.error('No token found');
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     setInterval(() => {
         loadFeedPosts(token);
         loadAllPosts(token);
-    }, 10000); // 10000 milliseconds = 10 seconds
+    }, 10000);
 });
 
 async function loadFeedPosts(token) {
@@ -90,7 +90,9 @@ function addUsernameClickEventListeners() {
         usrname.addEventListener('click', (event) => {
             event.preventDefault();
             const userId = event.target.getAttribute('data-user-id');
-            window.location.href = `userprofile.html?userId=${userId}`;
+            console.log(`Navigating to user profile with userId: ${userId}`);
+            localStorage.setItem('selectedUserId', userId);
+            window.location.href = `userprofile.html`;
         });
     });
 }
@@ -158,62 +160,3 @@ function showSection(section) {
     document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
     document.getElementById(`${section}Section`).classList.add('active');
 }
-
-// async function likePost(postId) {
-//     const token = localStorage.getItem('token');
-
-//     try {
-//         const response = await fetch(`http://localhost:3000/posts/likes`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Authorization': `Bearer ${token}`
-//             },
-//             body: JSON.stringify({ postId }) // Make sure postId is sent in the request body
-//         });
-
-//         const result = await response.json();
-//         if (result.success) {
-//             const likeCount = document.getElementById(`likeCount-${postId}`);
-//             likeCount.textContent = parseInt(likeCount.textContent) + 1;
-//         }
-//     } catch (error) {
-//         console.error('Error liking post:', error);
-//     }
-// }
-
-// async function commentPost(postId) {
-//     const token = localStorage.getItem('token');
-
-//     const commentText = document.getElementById(`commentText-${postId}`).value;
-//     if (!commentText) {
-//         alert('Comment cannot be empty.');
-//         return;
-//     }
-
-//     try {
-//         const response = await fetch(`http://localhost:3000/posts/comments`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Authorization': `Bearer ${token}`
-//             },
-//             body: JSON.stringify({ postId, text: commentText }) // Include postId in the request body
-//         });
-
-//         const result = await response.json();
-//         if (result.success) {
-//             const commentsContainer = document.getElementById(`comments-${postId}`);
-//             const commentElement = document.createElement('div');
-//             commentElement.className = 'comment';
-//             commentElement.innerHTML = `<strong><a href="#" class="usrname" data-user-id="${result.user_id}">${result.usrname}</a></strong>: ${commentText}`;
-//             commentsContainer.appendChild(commentElement);
-
-//             document.getElementById(`commentText-${postId}`).value = '';
-
-//             addUsernameClickEventListeners();
-//         }
-//     } catch (error) {
-//         console.error('Error commenting on post:', error);
-//     }
-// }

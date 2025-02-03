@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
-    
+
     console.log('Retrieved token:', token);
     console.log('Retrieved userId:', userId);
 
@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const li = document.createElement('li');
                     li.textContent = `${follower.usrname} (${follower.email})`;
                     li.dataset.userId = follower.id;
+                    li.addEventListener('click', handleUsernameClick);
                     li.addEventListener('contextmenu', handleRightClick);
                     followersList.appendChild(li);
                 });
@@ -50,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const li = document.createElement('li');
                     li.textContent = `${following.usrname} (${following.email})`;
                     li.dataset.userId = following.id;
+                    li.addEventListener('click', handleUsernameClick);
                     li.addEventListener('contextmenu', handleRightClick);
                     followingList.appendChild(li);
                 });
@@ -58,6 +60,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => console.error('Error fetching following:', error));
+    }
+
+    function handleUsernameClick(event) {
+        const userIdToView = event.target.dataset.userId;
+        console.log(`Navigating to user profile with userId: ${userIdToView}`);
+        localStorage.setItem('selectedUserId', userIdToView);
+        window.location.href = 'userprofile.html';
     }
 
     function handleRightClick(event) {
@@ -84,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert(`Error: ${data.error}`);
             } else {
                 alert('User unfollowed successfully!');
+                fetchFollowers();
                 fetchFollowing();
             }
         })
