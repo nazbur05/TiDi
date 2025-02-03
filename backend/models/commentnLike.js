@@ -7,8 +7,20 @@ export const createComment = async (postId, userId, text) => {
     return result.insertId;
 };
 
+// export const getCommentsByPost = async (postId) => {
+//     const query = 'SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC';
+//     const [rows] = await db.query(query, [postId]);
+//     return rows;
+// };
+
 export const getCommentsByPost = async (postId) => {
-    const query = 'SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC';
+    const query = `
+        SELECT comments.*, users.usrname
+        FROM comments
+        JOIN users ON comments.user_id = users.id
+        WHERE comments.post_id = ?
+        ORDER BY comments.created_at DESC
+    `;
     const [rows] = await db.query(query, [postId]);
     return rows;
 };
