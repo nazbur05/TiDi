@@ -15,9 +15,19 @@ export const getPostsByUser = async (userId) => {
 };
 
 // Get all posts
+// export const getAllPosts = async () => {
+//     const query = `
+//         SELECT posts.id, posts.text, posts.image_url, posts.created_at, users.usrname
+//         FROM posts
+//         JOIN users ON posts.user_id = users.id
+//         ORDER BY posts.created_at DESC
+//     `;
+//     const [rows] = await db.execute(query);
+//     return rows;
+// };
 export const getAllPosts = async () => {
     const query = `
-        SELECT posts.id, posts.text, posts.image_url, posts.created_at, users.usrname
+        SELECT posts.id, posts.text, posts.image_url, posts.created_at, posts.user_id, users.usrname
         FROM posts
         JOIN users ON posts.user_id = users.id
         ORDER BY posts.created_at DESC

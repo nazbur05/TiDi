@@ -69,8 +69,13 @@ export const getUserByUsername = async (usrname) => {
 };
 
 // Get a user by ID
+// export const getUserById = async (userId) => {
+//     const query = 'SELECT id, usrname, name FROM users WHERE id = ?';
+//     const [rows] = await db.query(query, [userId]);
+//     return rows[0];
+// };
 export const getUserById = async (userId) => {
-    const query = 'SELECT id, usrname, name FROM users WHERE id = ?';
+    const query = 'SELECT id, usrname, name, is_admin FROM users WHERE id = ?';
     const [rows] = await db.query(query, [userId]);
     return rows[0];
 };
