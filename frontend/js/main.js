@@ -7,31 +7,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         return;
     }
 
-    // await loadFeedPosts(token);
     await loadAllPosts(token);
 
     setInterval(() => {
-        // loadFeedPosts(token);
         loadAllPosts(token);
     }, 10000);
 });
-
-// async function loadFeedPosts(token) {
-//     try {
-//         const response = await fetch('http://localhost:3000/posts/followed', {
-//             headers: {
-//                 'Authorization': `Bearer ${token}`
-//             }
-//         });
-
-//         const posts = await response.json();
-//         console.log('Feed Posts:', posts);
-//         const feedContainer = document.getElementById('feedContainer');
-//         displayPosts(posts, feedContainer);
-//     } catch (error) {
-//         console.error('Error fetching feed posts:', error);
-//     }
-// }
 
 async function loadAllPosts(token) {
     try {
@@ -78,19 +59,29 @@ function displayPosts(posts, container) {
             `;
             container.appendChild(postElement);
 
-            postElement.addEventListener('contextmenu', (event) => {
+            postElement.addEventListener('contextmenu', async (event) => {
                 event.preventDefault();
-                if (confirm('Do you want to delete this post?')) {
-                    deletePost(post.id);
+                const user = await getUserInfo(token); // Fetch user info to check if admin or post creator
+                if (user.is_admin || user.id === post.user_id) { // Check if user is admin or post creator
+                    if (confirm('Do you want to delete this post?')) {
+                        deletePost(post.id);
+                    }
+                } else {
+                    alert('You do not have permission to delete this post.');
                 }
             });
 
             Array.from(postElement.querySelectorAll('.comment')).forEach(commentElement => {
-                commentElement.addEventListener('contextmenu', (event) => {
+                commentElement.addEventListener('contextmenu', async (event) => {
                     event.preventDefault();
+                    const user = await getUserInfo(token); // Fetch user info to check if admin or comment creator
                     const commentId = commentElement.id.split('-')[1];
-                    if (confirm('Do you want to delete this comment?')) {
-                        deleteComment(commentId);
+                    if (user.is_admin || user.id === commentElement.getAttribute('data-user-id')) { // Check if user is admin or comment creator
+                        if (confirm('Do you want to delete this comment?')) {
+                            deleteComment(commentId);
+                        }
+                    } else {
+                        alert('You do not have permission to delete this comment.');
                     }
                 });
             });
@@ -227,8 +218,3 @@ async function deleteComment(commentId) {
         alert('Failed to delete comment.');
     }
 }
-
-// function showSection(section) {
-//     document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-//     document.getElementById(`${section}Section`).classList.add('active');
-// }

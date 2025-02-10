@@ -88,19 +88,6 @@ export const updatePostHandler = async (req, res) => {
 };
 
 // Handler to delete a post
-// export const deletePostHandler = async (req, res) => {
-//     const { postId } = req.params;
-//     const userId = req.user.id;
-
-//     try {
-//         await deletePost(postId, userId);
-//         res.json({ success: true });
-//     } catch (error) {
-//         console.error('Error deleting post:', error);
-//         res.status(500).json({ success: false, error: 'Internal server error' });
-//     }
-// };
-
 export const deletePostHandler = async (req, res) => {
     const { postId } = req.params;
 

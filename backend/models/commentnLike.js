@@ -31,6 +31,10 @@ export const deleteComment = async (commentId) => {
     return result.affectedRows;
 };
 
+export const deleteUserComments = async (userId) => {
+    await db.query('DELETE FROM comments WHERE user_id = ?', [userId]);
+};
+
 // Like model functions
 export const addLike = async (postId, userId) => {
     const query = 'INSERT INTO likes (post_id, user_id) VALUES (?, ?)';

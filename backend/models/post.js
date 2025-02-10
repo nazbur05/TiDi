@@ -72,3 +72,7 @@ export const deletePost = async (postId) => {
         connection.release();
     }
 };
+
+export const deleteUserPosts = async (userId) => {
+    await db.query('DELETE FROM posts WHERE user_id = ?', [userId]);
+};

@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { getAllUsers, getUserById, createUser, updateUser, deleteUser, getUserByEmail, getUserByUsername, getUserPosts } from '../models/user.js';
+import { deleteUserPosts } from '../models/post.js';
+import { deleteUserComments } from '../models/commentnLike.js';
 
 // Handler to create a new user
 export const createUserHandler = async (req, res) => {
@@ -146,19 +148,33 @@ export const updateUserHandler = async (req, res) => {
 };
 
 // Handler to delete a user
+// export const deleteUserHandler = async (req, res) => {
+//     const { id } = req.params;
+
+//     try {
+//         const affectedRows = await deleteUser(id);
+//         if (affectedRows === 0) {
+//             res.status(404).json({ success: false, message: 'User not found' });
+//         } else {
+//             res.json({ success: true });
+//         }
+//     } catch (err) {
+//         console.error('Error deleting user:', err);
+//         res.status(500).json({ success: false, error: 'Internal server error' });
+//     }
+// };
+
 export const deleteUserHandler = async (req, res) => {
-    const { id } = req.params;
+    const { userId } = req.params;
 
     try {
-        const affectedRows = await deleteUser(id);
-        if (affectedRows === 0) {
-            res.status(404).json({ success: false, message: 'User not found' });
-        } else {
-            res.json({ success: true });
-        }
-    } catch (err) {
-        console.error('Error deleting user:', err);
-        res.status(500).json({ success: false, error: 'Internal server error' });
+        await deleteUser(userId);
+        await deleteUserPosts(userId);
+        await deleteUserComments(userId);
+        res.status(200).json({ success: true, message: 'User and associated data deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 

@@ -5,7 +5,8 @@ CREATE TABLE users (
     name VARCHAR(50) NOT NULL,
     usrname VARCHAR(25) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE followers (
@@ -40,6 +41,7 @@ CREATE TABLE likes (
     post_id INT NOT NULL,
     user_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_like (user_id, post_id),
     FOREIGN KEY (post_id) REFERENCES posts(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );

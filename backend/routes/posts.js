@@ -3,6 +3,7 @@ import multer from 'multer';
 import { createPostHandler, getPostsByUserHandler, getAllPostsHandler, getPostsByFollowingHandler, updatePostHandler, deletePostHandler } from '../controllers/postsc.js';
 import { createCommentHandler, getCommentsByPostHandler, deleteCommentHandler, addLikeHandler, removeLikeHandler, getLikesByPostHandler } from '../controllers/commentsnLikesc.js';
 import authenticate from '../auth.js';
+import { authorizeAdmin } from '../auth.js';
 
 const router = express.Router();
 const upload = multer({ dest: '../uploads/' }); 
@@ -23,7 +24,10 @@ router.get('/followed', authenticate, getPostsByFollowingHandler);
 router.put('/:postId', upload.single('image'), authenticate, updatePostHandler);
 
 // Delete a post
-router.delete('/:postId', authenticate, deletePostHandler);
+// router.delete('/:postId', authenticate, deletePostHandler);
+
+// Route to delete a post
+router.delete('/:postId', authenticate, authorizeAdmin, deletePostHandler);
 
 // Comment routes
 router.post('/comments', authenticate, createCommentHandler);
