@@ -111,7 +111,7 @@ async function getCurrentUserInfo(token) {
 
 async function followUser(userId, token) {
     try {
-        const response = await fetch(`http://localhost:3000/follow/${userId}`, {
+        const response = await fetch(`http://localhost:3000/followers/follow/${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ async function followUser(userId, token) {
 
 async function unfollowUser(userId, token) {
     try {
-        const response = await fetch(`http://localhost:3000/unfollow/${userId}`, {
+        const response = await fetch(`http://localhost:3000/followers/unfollow/${userId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
